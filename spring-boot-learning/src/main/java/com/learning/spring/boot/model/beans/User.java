@@ -2,18 +2,25 @@ package com.learning.spring.boot.model.beans;
 
 import java.util.Date;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+@Entity
 public class User {
 	private Integer id;
 	private String name;
 	private Date birthDate;
 
-	protected User() { // This default no argument constructor had to be written
-						// as there is already a custom constructor present.
-						// while executing post requests spring demands a
-						// default no-arg constructor, which is automatically
-						// available if we do not write a constructor at all,
-						// but since we wrote a custom one with arguments now we
-						// will have to write one with no-args explicitly
+	/*
+	 * This default no argument constructor had to be written as there is
+	 * already a custom constructor present. while executing post requests
+	 * spring demands a default no-arg constructor, which is automatically
+	 * available if we do not write a constructor at all, but since we wrote a
+	 * custom one with arguments now we will have to write one with no-args
+	 * explicitly
+	 */
+	protected User() {
 		super();
 	}
 
@@ -24,6 +31,8 @@ public class User {
 		this.birthDate = birthDate;
 	}
 
+	@Id
+	@GeneratedValue
 	public Integer getId() {
 		return id;
 	}
