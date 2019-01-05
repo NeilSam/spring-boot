@@ -1,16 +1,21 @@
 package com.learning.spring.boot.model.beans;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 @Entity
 public class User {
 	private Integer id;
 	private String name;
 	private Date birthDate;
+	
+	@OneToMany(mappedBy="user") //This means this field will be mapped by the "user" field present in Post
+	private List<Post> posts;
 
 	/*
 	 * This default no argument constructor had to be written as there is
@@ -55,6 +60,14 @@ public class User {
 
 	public void setBirthDate(Date birthDate) {
 		this.birthDate = birthDate;
+	}
+	
+	public List<Post> getPosts() {
+		return posts;
+	}
+
+	public void setPosts(List<Post> posts) {
+		this.posts = posts;
 	}
 
 	@Override
