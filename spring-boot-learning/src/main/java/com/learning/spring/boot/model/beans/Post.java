@@ -6,6 +6,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Post {
 
@@ -16,6 +18,7 @@ private Integer id;
 private String description;
 
 @ManyToOne(fetch=FetchType.LAZY)
+@JsonIgnore //because user will try to print post and post will again try to print user. endless recursion
 private User user;
 
 public Integer getId() {

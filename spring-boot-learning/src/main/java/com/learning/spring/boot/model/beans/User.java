@@ -10,6 +10,9 @@ import javax.persistence.OneToMany;
 
 @Entity
 public class User {
+	
+	@Id
+	@GeneratedValue
 	private Integer id;
 	private String name;
 	private Date birthDate;
@@ -26,7 +29,6 @@ public class User {
 	 * explicitly
 	 */
 	protected User() {
-		super();
 	}
 
 	public User(Integer id, String name, Date birthDate) {
@@ -36,8 +38,6 @@ public class User {
 		this.birthDate = birthDate;
 	}
 
-	@Id
-	@GeneratedValue
 	public Integer getId() {
 		return id;
 	}

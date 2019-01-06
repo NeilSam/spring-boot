@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.learning.spring.boot.model.beans.Post;
 import com.learning.spring.boot.model.beans.User;
+import com.learning.spring.boot.model.dao.PostRepository;
 import com.learning.spring.boot.model.dao.UserRepository;
 import com.learning.spring.boot.support.exceptions.UserNotFoundException;
 
@@ -27,6 +29,9 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 public class UserJPAResource {
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private PostRepository postRepository;
 
 	@GetMapping("/jpa/users")
 	public List<User> retrieveAllUsers() {
@@ -49,7 +54,6 @@ public class UserJPAResource {
 				.toUri(); // id will be taken from savedUser.getId below
 
 		return ResponseEntity.created(location).build();
-
 	}
 
 	@DeleteMapping("/jpa/users/{id}")
@@ -70,6 +74,31 @@ public class UserJPAResource {
 		// this.getClass()).retrieveAllUsers() gives the link "/users"
 		// the link appears against the name ""/users""
 		return resource;
+	}
+	
+	@GetMapping("/jpa/users/{id}/posts")
+	public List<Post> retrieveAllPostsByUser(@PathVariable int id) {
+		Optional<User> user = userRepository.findById(id);
+		if (!user.isPresent()) {
+			throw new UserNotFoundException("User With Id :" + id + " Not Found");
+		}
+		return user.get().getPosts();
+	}
+	
+	@PostMapping("/jpa/users/{id}/posts")
+	public ResponseEntity<Object> createPostForUser(@RequestBody Post post, @PathVariable int id) {
+		
+		Optional<User> user = userRepository.findById(id);
+		if (!user.isPresent()) {
+			throw new UserNotFoundException("User With Id :" + id + " Not Found");
+		}
+		post.setUser(user.get());
+		
+		Post savedPost = postRepository.save(post);
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedPost.getId())
+				.toUri(); // id will be taken from savedUser.getId below
+
+		return ResponseEntity.created(location).build();
 	}
 
 }
